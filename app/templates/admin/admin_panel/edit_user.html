@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 10px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        textarea {
+            width: calc(100% - 10px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <h2>Редактирование пользователя</h2>
+    <form action="/edit_user/{{ user_id }}" method="POST">
+        <label for="full_name">ФИО:</label>
+        <input type="text" id="full_name" name="full_name" value="{{ user[1] }}"><br>
+        <label for="email">Электронная почта:</label>
+        <input type="email" id="email" name="email" value="{{ user[2] }}"><br>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password"><br>
+        <label for="role">Роль:</label>
+        <input type="text" id="role" name="role" value="{{ user[4] }}"><br>
+        <!-- Добавлены поля и кнопки для блокировки или отключения пользователя -->
+        <label for="reason_disable">Причина блокировки/отключения:</label>
+        <input type="text" id="reason_disable" name="reason_disable"><br>
+        <button type="submit" name="action" value="save">Сохранить изменения</button>
+        <label for="banned">Banned:</label>
+        <input type="checkbox" id="banned" name="banned" {% if user[5] == 1 %}checked{% endif %}>
+        
+        <button type="submit" name="action" value="disable">Отключить пользователя</button>
+    </form>
+</body>
+</html>

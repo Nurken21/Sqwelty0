@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование билета</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 50px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="datetime-local"],
+        input[type="number"] {
+            width: calc(100% - 18px); /* Подкорректирована ширина, чтобы учесть границу и отступ */
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Редактирование билета</h2>
+        <form action="/edit_flight/{{ flight_id }}" method="POST">
+            <label for="flight_number">Номер рейса:</label>
+            <input type="text" id="flight_number" name="flight_number" value="{{ flight['flight_number'] }}" required>
+            
+            <label for="departure">Пункт отправления:</label>
+            <input type="text" id="departure" name="departure" value="{{ flight['departure'] }}" required>
+            
+            <label for="destination">Пункт назначения:</label>
+            <input type="text" id="destination" name="destination" value="{{ flight['destination'] }}" required>
+            
+            <label for="departure_time">Дата и время отправления:</label>
+            <input type="datetime-local" id="departure_time" name="departure_time" value="{{ flight['departure_time'] }}" required>
+            
+            <label for="arrival_time">Дата и время прибытия:</label>
+            <input type="datetime-local" id="arrival_time" name="arrival_time" value="{{ flight['arrival_time'] }}" required>
+            
+            <label for="price">Цена:</label>
+            <input type="number" id="price" name="price" value="{{ flight['price'] }}" required>
+            
+            <button type="submit">Сохранить изменения</button>
+        </form>
+    </div>
+    
+</body>
+</html>

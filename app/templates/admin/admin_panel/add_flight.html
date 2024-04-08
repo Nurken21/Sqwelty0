@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление рейса</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        #add_flight {
+            background-color: #ffffff;
+            width: 50%;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <section id="add_flight">
+        <h2>Добавление рейса</h2>
+        <form method="POST" action="/add_flight">
+            <label for="flight_number">Номер рейса:</label>
+            <input type="text" id="flight_number" name="flight_number" required>
+            <label for="departure">Пункт отправления:</label>
+            <input type="text" id="departure" name="departure" required>
+            <label for="destination">Пункт назначения:</label>
+            <input type="text" id="destination" name="destination" required>
+            <label for="departure_time">Время отправления:</label>
+            <input type="text" id="departure_time" name="departure_time" required>
+            <label for="arrival_time">Время прибытия:</label>
+            <input type="text" id="arrival_time" name="arrival_time" required>
+            <label for="price">Цена:</label>
+            <div style="display: flex;">
+                <input type="number" id="price" name="price" required>
+                <select name="currency" id="currency">
+                    <option value="KZT">KZT</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="RUB">RUB</option>
+                    <!-- Добавьте другие валюты по вашему выбору -->
+                </select>
+            </div>
+            <button type="submit">Добавить рейс</button>
+        </form>
+    </section>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Добавление календаря для выбора времени отправления и прибытия
+            $('#departure_time').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                timePicker24Hour: true,
+                locale: {
+                    format: 'YYYY-MM-DD HH:mm:ss'
+                }
+            });
+
+            $('#arrival_time').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                timePicker24Hour: true,
+                locale: {
+                    format: 'YYYY-MM-DD HH:mm:ss'
+                }
+            });
+        });
+    </script>
+</body>
+</html>

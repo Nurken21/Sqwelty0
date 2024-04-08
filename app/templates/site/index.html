@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amonic</title>
+    <style>
+        /* Resetting default margin and padding for all elements */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9; /* Light background color for better readability */
+            color: #333; /* Darker text color for better contrast */
+            margin: 0; /* Reset margin for the body */
+            padding: 0; /* Reset padding for the body */
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background-color: #333; /* Dark background color */
+            color: #f9f9f9; /* Lighter text color */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #005a9c;
+            color: white;
+        }
+
+        .nav-links {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .nav-links li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease; /* Smooth transition effect for color change */
+        }
+
+        .nav-links a:hover {
+            color: #f2f2f2; /* Change link color on hover */
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Button style for light mode */
+        .button {
+            padding: 10px 20px;
+            background-color: #4a89dc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition effect for background color change */
+        }
+
+        /* Button style for dark mode */
+        .button.dark-mode {
+            background-color: #007bff; /* Darker background color */
+            color: #f9f9f9; /* Lighter text color */
+        }
+
+        .button:hover {
+            background-color: #357bd8; /* Change button background color on hover */
+        }
+
+        .button.dark-mode:hover {
+            background-color: #004d80; /* Change button background color on hover in dark mode */
+        }
+
+        .flights {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-links li {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+
+        /* Adjustments for welcome message */
+        .action-buttons p {
+            margin: 0; /* Remove default margin for the paragraph */
+        }
+
+        /* Additional style for schedule table heading */
+        .schedule-table h3 {
+            text-align: center;
+            color: #555; /* Darker text color for better contrast */
+            margin-top: 10px; /* Add some top margin for separation */
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="{{ url_for('static', filename='logo1.png') }}" alt="Amonic.login" width="250" height="75">
+
+
+    <!-- Check if the user is authenticated -->
+    {% if not session['email'] %}
+    <div class="action-buttons">
+        <button class="button" onclick="location.href='/login'">Вход</button>
+        <button class="button" onclick="location.href='/register'">Регистрация</button>
+    </div>
+    {% else %}
+    <div class="action-buttons">
+        <p>Добро пожаловать, {{ session['email'] }}!</p>
+        <button class="button" onclick="location.href='/logout'">Выход</button>
+    </div>
+    {% endif %}
+</div>
+
+<h2 id="schedule">Билеты</h2>
+<table class="schedule-table">
+    <thead>
+        <tr>
+            <th>Номер рейса</th>
+            <th>Место отправления</th>
+            <th>Место назначения</th>
+            <th>Дата и время отправления</th>
+            <th>Дата и время прибытия</th>
+            <th>Цена (тг)</th>
+            <th>Купить</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for flight in flights %}
+        <tr>
+            <td>{{ flight[1] }}</td>
+            <td>{{ flight[2] }}</td>
+            <td>{{ flight[3] }}</td>
+            <td>{{ flight[4] }}</td>
+            <td>{{ flight[5] }}</td>
+            <td>{{ flight[6] }}</td>
+            <td>
+                <h2>Покупка билета</h2>
+                <form action="{{ url_for('buy_ticket') }}" method="POST">
+                    <input type="hidden" name="flight_id" value="{{ flight[0] }}">
+                    <button type="submit">Купить билет</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2 id="info">Информация о компании</h2>
+<p></p>
+
+<script>
+    // Toggle dark mode
+    function toggleDarkMode() {
+        const body = document.body;
+        body.classList.toggle('dark-mode');
+    }
+</script>
+
+</body>
+</html>

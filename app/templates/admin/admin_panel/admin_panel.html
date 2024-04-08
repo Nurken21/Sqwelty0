@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        /* Reset CSS */
+        body, ul, li, h1, h2, h3, p, table, th, td, select, button, input {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f2f2f2;
+            color: #333;
+            font-size: 16px;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            color: #333;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 40px;
+            display: none; /* Скрываем все разделы при загрузке страницы */
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Стиль для выпадающего списка */
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Стиль для кнопок */
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px; /* Добавлено для отступа между кнопками */
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Стиль для input */
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Panel</h1>
+        <div class="action-buttons">
+            <!-- Кнопка выхода -->
+            <p>Добро пожаловать, {{ session['email'] }}!</p>
+            <button><a href="{{ url_for('admin_logout') }}">Выйти</a></button>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <!-- Навигационный список -->
+            <li>
+                <select id="selectOption" onchange="showSection()">
+                    <option value="">Выберите раздел</option>
+                    <option value="users">Пользователи</option>
+                    <option value="admins">Админы</option>
+                    <option value="flights">Рейсы</option>
+                </select>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <!-- Разделы, которые будут заполняться после выбора опции из списка -->
+        <section id="users">
+            <h2>Пользователи</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Role</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user[0] }}</td>
+                        <td>{{ user[1] }}</td>
+                        <td>{{ user[2] }}</td>
+                        <td>{{ user[3] }}</td>
+                        <td>{{ user[4] }}</td>
+                        <td>
+                            <form action="/edit_user/{{ user[0] }}" method="GET">
+                                <button type="submit">Изменить</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="admins">
+            <h3>Admins:</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admin in admins %}
+                    <tr>
+                        <td>{{ admin[0] }}</td>
+                        <td>{{ admin[1] }}</td>
+                        <td>{{ admin[2] }}</td>
+                        <td>
+                            <!-- Добавлены кнопки для редактирования и удаления администраторов -->
+                            <form action="/edit_admin/{{ admin[0] }}" method="GET">
+                                <button type="submit">Изменить</button>
+                            </form>
+                            <form action="/delete_admin/{{ admin[0] }}" method="POST">
+                                <button type="submit">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="upload">
+            <h2>Загрузка файла</h2>
+            <form method="POST" action="{{ url_for('upload_data') }}" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".csv">
+                <button type="submit">Загрузить</button>
+            </form>
+        </section>
+
+        <section id="flights">                
+            <h2>Рейсы</h2>
+            <div class="flights">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Борт сомалёта</th>
+                            <th>Пункт отправления</th>
+                            <th>Пункт назначения</th>
+                            <th>Дата вылета</th>
+                            <th>Время вылета</th>
+                            <th>Цена</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for flight in flights %}
+                        <tr id="flight_{{ flight[0] }}">
+                            <td>{{ flight[1]}}</td>
+                            <td>{{ flight[2] }}</td>
+                            <td>{{ flight[3] }}</td>
+                            <td>{{ flight[4] }}</td>
+                            <td>{{ flight[5]}}</td>
+                            <td>{{ flight[6] }}</td>
+                            <td>
+                                <form action="/edit_flight/{{ flight[0] }}" method="POST">
+                                    <button type="submit">Изменить</button>
+                                </form>                           
+                                <button class="button" onclick="confirmDelete('{{ flight[0] }}')">Удалить</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <form action="/add_flight" method="post">
+                    <button type="submit">Создать рейс</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    <script>
+        function confirmDelete(flightId) {
+            if (confirm('Вы уверены, что хотите удалить этот рейс?')) {
+                fetch(`/delete_flight/${flightId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        flight_id: flightId
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Рейс успешно удален!');
+                        window.location.reload(); // Перезагрузка страницы после удаления
+                    } else {
+                        alert('Что-то пошло не так. Пожалуйста, попробуйте еще раз.');
+                    }
+                })
+                .catch(error => console.error('Ошибка удаления рейса:', error));
+            }
+        }
+
+        // Функция для отображения разделов в зависимости от выбранной опции
+        function showSection() {
+            var selectedOption = document.getElementById("selectOption").value;
+            var sections = document.querySelectorAll("main > section");
+            sections.forEach(function(section) {
+                section.style.display = "none";
+            });
+            if (selectedOption !== "") {
+                document.getElementById(selectedOption).style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
